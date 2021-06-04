@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React Skeleton</title>
+</head>
+<body>
+<canvas id="glCanvas" width="100" height="300"></canvas>
+</body>
+<script>
+    var ctx;
+    var posX = 0;
+    var posY = 0;
+    var puyoSize = 10;
+    var screenHeight = 300;
+    var speed = 100;
+    main();
+
+    function main() {
+        var canvas = document.querySelector("#glCanvas");
+        ctx = canvas.getContext("2d");
+
+        var intervalID = window.setInterval(tick, speed);
+
+    }
+
+    function tick() {
+        if (posY > 0 && posY < screenHeight) {
+            clearPuyo(posX, posY - puyoSize)
+            clearPuyo(posX + puyoSize, posY - puyoSize)
+        }
+        drawRedPuyo(posX, posY);
+        drawBluePuyo(posX + puyoSize, posY);
+        posY += puyoSize;
+
+    }
+
+    function clearPuyo(x, y) {
+        drawPuyo(x, y, 255, 255, 255, 255);
+    }
+
+    function drawBluePuyo(x, y) {
+        drawPuyo(x, y, 0, 0, 255, 255);
+    }
+
+    function drawRedPuyo(x, y) {
+        drawPuyo(x, y, 255, 0, 0, 255);
+    }
+
+    function drawPuyo(x, y, r, g, b, a) {
+        ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + (a / 255) + ")";
+        ctx.fillRect(x, y, puyoSize, puyoSize);
+    }
+</script>
+</html>
