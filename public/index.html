@@ -13,30 +13,97 @@
     var posY = 0;
     var puyoSize = 10;
     var screenHeight = 300;
+    var screenWidth = 100;
+    var screenHeightPuyos = screenHeight / puyoSize;
+    var screenWidthPuyos = screenWidth / puyoSize;
     var speed = 100;
+    var redPuyo = 1;
+    var bluePuyo = 2;
+    var purplePuyo = 3;
+    var greenPuyo = 4;
+    var yellowPuyo = 5;
+    var leftColour;
+    var rightColour;
+    var gameBoard = new Array(screenHeightPuyos).fill(0).map(() => new Array(screenWidthPuyos).fill(0));
+    var stacks = new Array(screenWidthPuyos).fill(0);
+
     main();
 
     function main() {
         var canvas = document.querySelector("#glCanvas");
         ctx = canvas.getContext("2d");
 
+        randomizePuyoPuyo();
+
         var intervalID = window.setInterval(tick, speed);
 
+        document.addEventListener('keyup', (e) => {
+            switch (e.code) {
+                case "ArrowLeft" :
+                    if (posX >= 0) {
+                        posX--;
+                    }
+                    break;
+                case "ArrowRight" :
+                    if (posX < screenWidthPuyos) {
+                        posX++;
+                    }
+                    break;
+            }
+        });
     }
 
     function tick() {
-        if (posY > 0 && posY < screenHeight) {
-            clearPuyo(posX, posY - puyoSize)
-            clearPuyo(posX + puyoSize, posY - puyoSize)
-        }
-        drawRedPuyo(posX, posY);
-        drawBluePuyo(posX + puyoSize, posY);
-        posY += puyoSize;
+        if (posY > 0 && posY < screenHeightPuyos - stacks[posX]) {
 
+            for (var x = 0; x < screenWidthPuyos; x++) {
+                clearPuyo(x, posY - 1)
+            }
+        }
+
+        if (posY >= screenHeightPuyos - stacks[posX]) {
+            stacks[posX] = stacks[posX] + 1;
+            randomizePuyoPuyo();
+            posX = 0;
+            posY = 0;
+        } else {
+            drawColouredPuyo(leftColour, posX, posY);
+            drawColouredPuyo(rightColour, posX + 1, posY);
+            posY++;
+        }
+    }
+
+    function randomizePuyoPuyo() {
+        leftColour = rollRandomColour();
+        rightColour = rollRandomColour();
+    }
+
+    function rollRandomColour() {
+        return Math.floor(Math.random() * 5) + 1;
     }
 
     function clearPuyo(x, y) {
         drawPuyo(x, y, 255, 255, 255, 255);
+    }
+
+    function drawColouredPuyo(colour, x, y) {
+        switch (colour) {
+            case redPuyo:
+                drawRedPuyo(x, y);
+                break;
+            case bluePuyo:
+                drawBluePuyo(x, y);
+                break;
+            case purplePuyo:
+                drawPurplePuyo(x, y);
+                break;
+            case greenPuyo:
+                drawGreenPuyo(x, y);
+                break;
+            default:
+                drawYellowPuyo(x, y);
+                break;
+        }
     }
 
     function drawBluePuyo(x, y) {
@@ -47,9 +114,21 @@
         drawPuyo(x, y, 255, 0, 0, 255);
     }
 
+    function drawPurplePuyo(x, y) {
+        drawPuyo(x, y, 255, 0, 255, 255);
+    }
+
+    function drawGreenPuyo(x, y) {
+        drawPuyo(x, y, 0, 255, 0, 255);
+    }
+
+    function drawYellowPuyo(x, y) {
+        drawPuyo(x, y, 255, 255, 0, 255);
+    }
+
     function drawPuyo(x, y, r, g, b, a) {
         ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + (a / 255) + ")";
-        ctx.fillRect(x, y, puyoSize, puyoSize);
+        ctx.fillRect(x * puyoSize, y * puyoSize, puyoSize, puyoSize);
     }
 </script>
 </html>
