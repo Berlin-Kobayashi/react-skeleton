@@ -2,5 +2,4 @@ build:
 	@docker build -t react-skeleton .
 
 run:
-	@docker run -p 8080:80 react-skeleton
-
+	@docker run -p 3000:3000 react-skeleton

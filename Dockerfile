@@ -1,3 +1,12 @@
-FROM nginx:1.21
+FROM node:16 as build
 
-COPY /public/ /usr/share/nginx/html/
+WORKDIR /usr/src/app/
+
+COPY . .
+
+RUN yarn install
+
+RUN npm run build
+
+CMD npm run start
+
