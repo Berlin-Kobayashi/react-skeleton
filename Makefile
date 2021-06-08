@@ -1,5 +1,8 @@
-build:
-	@docker build -t react-skeleton .
+install:
+	@docker build -t react-skeleton --file Dockerfile.dev .
 
 run:
-	@docker run -p 3000:3000 react-skeleton
+	@docker run -v `pwd`:/usr/src/app/ -p 3000:3000 --name react-skeleton react-skeleton
+
+kill:
+	@docker rm -f react-skeleton
